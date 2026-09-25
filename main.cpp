@@ -1,31 +1,29 @@
 #include <iostream>
-
-class Box {
-    public:
-    Box(int value): data(new int(value)) {}
-
-    ~Box() { // destructor
-        delete data;
-        data = nullptr; // gotta do this to say bye to dangling pointer
-    }
-    int value() {
-        return *data;
-    }
-    private:
-    int *data;
-
-};
-
+#include "List.h"
+#include "Data.h"
 int main() {
+    std::unique_ptr<List<int>> list = makeList<int>();
 
-    // int* P = new int;
-    // std::cout << P << std::endl;
-    // delete P;
-    // P = nullptr;
+    list->addFront(new int(10));
+    list->addFront(new int(20));
+    list->addFront(new int(30));
+    list->print();
 
-    Box *box1 = new Box(6); // box pointer
-    std::cout << box1->value() << std::endl; // no longer using '.' becuase it is not a stack variable anymore, pointers and heap use arrow.
-    delete box1;
+    int key = 20;
+    std::cout << "search(20): "
+             << (list->search(&key) ? "found" : "not found") << std::endl;
+    list->deleteFront();
+    list->print();
 
+    std::unique_ptr<List<Data>> roster = makeList<Data>();
+    roster->addFront(new Data(1, "Alice"));
+    roster->addFront(new Data(2, "Bilal"));
+    roster->addFront(new Data(3, "Chen"));
+    roster->print();
+
+    Data query(2, "");
+    std::cout << "search(id 2): "
+            << (roster->search(&query) ? "found" : "not found")
+            << std::endl;
     return 0;
 }
